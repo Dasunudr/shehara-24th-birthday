@@ -334,29 +334,11 @@ export const siteConfig = {
     {
       id: "vid-1",
       src: "/videos/video-01.mp4",
-      poster: "/images/sunset-01.jpg",
-      title: "Golden Hour Glow",
-      subtitle: "Waves & Whispers",
-      duration: "0:45",
-      caption: "Shehara by the sea with the peaceful melody of the waves."
-    },
-    {
-      id: "vid-2",
-      src: "/videos/video-02.mp4",
-      poster: "/images/garden-01.jpg",
-      title: "Spontaneous Laughter",
-      subtitle: "Little Moments of Pure Joy",
-      duration: "0:30",
-      caption: "The candid seconds where Shehara's happiness took center stage."
-    },
-    {
-      id: "vid-3",
-      src: "/videos/video-03.mp4",
-      poster: "/images/portrait-01.jpg",
-      title: "Cherished Highlights",
-      subtitle: "A Year to Remember",
-      duration: "1:15",
-      caption: "A montage of smiles, candid glances, and sweet milestones with Shehara."
+      poster: "/images/portrait-02.jpg",
+      title: "Special Moments with Shehara",
+      subtitle: "Memories in Motion",
+      duration: "HD Video",
+      caption: "Cherished moments, radiant smiles, and unforgettable memories celebrated on your 24th birthday."
     }
   ] as VideoItem[],
 

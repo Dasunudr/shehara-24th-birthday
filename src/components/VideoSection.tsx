@@ -58,7 +58,7 @@ export default function VideoSection() {
         </div>
 
         {/* Video Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className={`grid grid-cols-1 ${siteConfig.videos.length === 1 ? 'max-w-2xl mx-auto' : siteConfig.videos.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'} gap-6 sm:gap-8`}>
           {siteConfig.videos.map((video, idx) => (
             <motion.div
               key={video.id}

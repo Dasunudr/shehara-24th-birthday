@@ -14,6 +14,7 @@ import LetterSection from "@/components/LetterSection";
 import BirthdayCake from "@/components/BirthdayCake";
 import FinalSection from "@/components/FinalSection";
 import ParticleBackground from "@/components/ParticleBackground";
+import FlowerRain from "@/components/FlowerRain";
 import CustomCursor from "@/components/CustomCursor";
 
 export default function BirthdayPage() {
@@ -23,6 +24,9 @@ export default function BirthdayPage() {
     <main className="relative min-h-screen bg-night-900 text-champagne-50 overflow-x-hidden film-grain">
       {/* Interactive Custom Cursor */}
       <CustomCursor />
+
+      {/* Romantic Flower Rain Shower */}
+      <FlowerRain />
 
       {/* Ambient Floating Bokeh Particles */}
       <ParticleBackground />

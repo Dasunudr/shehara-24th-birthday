@@ -20,18 +20,17 @@ export default function HeroSection() {
       id="hero"
       className="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden bg-night-900 pt-20 pb-12"
     >
-      {/* Background Image Container with Ken Burns effect */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="relative w-full h-full animate-ken-burns">
-          <Image
-            src={getAssetPath(siteConfig.heroImage)}
-            alt="Hero Portrait"
-            fill
-            priority
-            className="object-cover object-center scale-105 filter brightness-[0.75] contrast-[1.05]"
-            sizes="100vw"
-          />
-        </div>
+      {/* Background Cinematic Video Container */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-night-900">
+        <video
+          src={getAssetPath("/videos/video-01.mp4")}
+          poster={getAssetPath(siteConfig.heroImage)}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover object-center scale-105 filter brightness-[0.7] contrast-[1.05]"
+        />
 
         {/* Cinematic Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/60 to-night-900/40" />

@@ -2,10 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Menu, X, Heart } from "lucide-react";
+import { Sparkles, Menu, X, Heart, Music, Music2 } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
 
-export default function Navbar() {
+interface NavbarProps {
+  isPlaying?: boolean;
+  onToggleMusic?: () => void;
+}
+
+export default function Navbar({ isPlaying = false, onToggleMusic }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -80,8 +85,33 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Action buttons: Music toggle & Mobile menu button */}
           <div className="flex items-center gap-2">
+            {/* Music Quick Button */}
+            {onToggleMusic && (
+              <button
+                onClick={onToggleMusic}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                  isPlaying
+                    ? "bg-amber-400/20 text-amber-300 border border-amber-400/40 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
+                    : "bg-white/5 text-champagne-300/80 hover:text-champagne-100 border border-white/10 hover:bg-white/10"
+                }`}
+                title={isPlaying ? "Pause Ambient Music" : "Play Calm Melody"}
+              >
+                {isPlaying ? (
+                  <>
+                    <Music2 className="w-3.5 h-3.5 animate-bounce text-amber-300" />
+                    <span className="hidden sm:inline">Playing</span>
+                  </>
+                ) : (
+                  <>
+                    <Music className="w-3.5 h-3.5 text-champagne-300" />
+                    <span className="hidden sm:inline">Calm Music</span>
+                  </>
+                )}
+              </button>
+            )}
+
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -130,6 +160,20 @@ export default function Navbar() {
                   <Sparkles className="w-3.5 h-3.5 text-amber-300/40" />
                 </button>
               ))}
+
+              {onToggleMusic && (
+                <div className="pt-3 mt-2 border-t border-white/10">
+                  <button
+                    onClick={() => {
+                      onToggleMusic();
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl text-sm font-medium bg-gradient-to-r from-amber-500/20 to-roseGold-500/20 border border-amber-400/30 text-amber-200 flex items-center justify-center gap-2"
+                  >
+                    <Music className="w-4 h-4" />
+                    <span>{isPlaying ? "Pause Music" : "Play Calm Melody 🎵"}</span>
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

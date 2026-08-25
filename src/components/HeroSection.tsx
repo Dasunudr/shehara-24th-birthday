@@ -1,45 +1,21 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, ChevronDown, Volume2, VolumeX, Play, Pause } from "lucide-react";
+import { Sparkles, Heart, ChevronDown } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
 import { getAssetPath } from "@/utils/assetPath";
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.defaultMuted = true;
       videoRef.current.muted = true;
-      videoRef.current.play().catch(() => {
-        setIsPlaying(false);
-      });
+      videoRef.current.play().catch(() => {});
     }
   }, []);
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      const nextMuted = !videoRef.current.muted;
-      videoRef.current.muted = nextMuted;
-      setIsMuted(nextMuted);
-    }
-  };
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      }
-    }
-  };
 
   const scrollToNext = () => {
     const gallery = document.querySelector("#gallery");
@@ -119,26 +95,6 @@ export default function HeroSection() {
             &ldquo;{siteConfig.subheading}&rdquo;
           </p>
         </motion.div>
-      </div>
-
-      {/* Video Controls (Mute/Unmute & Play/Pause) floating bottom right */}
-      <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2">
-        <button
-          onClick={togglePlay}
-          className="p-2.5 rounded-full glass-panel bg-night-900/60 hover:bg-night-900/90 text-champagne-100 border border-white/20 transition-all hover:scale-105 backdrop-blur-md cursor-pointer shadow-lg"
-          title={isPlaying ? "Pause background video" : "Play background video"}
-          aria-label={isPlaying ? "Pause video" : "Play video"}
-        >
-          {isPlaying ? <Pause className="w-4 h-4 text-amber-300" /> : <Play className="w-4 h-4 text-amber-300 fill-amber-300" />}
-        </button>
-        <button
-          onClick={toggleMute}
-          className="p-2.5 rounded-full glass-panel bg-night-900/60 hover:bg-night-900/90 text-champagne-100 border border-white/20 transition-all hover:scale-105 backdrop-blur-md cursor-pointer shadow-lg"
-          title={isMuted ? "Unmute video sound" : "Mute video sound"}
-          aria-label={isMuted ? "Unmute video" : "Mute video"}
-        >
-          {isMuted ? <VolumeX className="w-4 h-4 text-champagne-300" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
-        </button>
       </div>
 
       {/* Scroll Down Indicator */}

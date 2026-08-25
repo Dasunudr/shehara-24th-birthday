@@ -13,12 +13,24 @@ import GardenSection from "@/components/GardenSection";
 import LetterSection from "@/components/LetterSection";
 import BirthdayCake from "@/components/BirthdayCake";
 import FinalSection from "@/components/FinalSection";
+import MusicPlayer from "@/components/MusicPlayer";
 import ParticleBackground from "@/components/ParticleBackground";
 import FlowerRain from "@/components/FlowerRain";
 import CustomCursor from "@/components/CustomCursor";
 
 export default function BirthdayPage() {
   const [introFinished, setIntroFinished] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+  const toggleMusic = () => {
+    setIsMusicPlaying((prev) => !prev);
+  };
+
+  const handleIntroComplete = () => {
+    setIntroFinished(true);
+    // Auto-start calm ambient melody upon entering the experience
+    setIsMusicPlaying(true);
+  };
 
   return (
     <main className="relative min-h-screen bg-night-900 text-champagne-50 overflow-x-hidden film-grain">
@@ -33,15 +45,15 @@ export default function BirthdayPage() {
 
       {/* Opening Intro Sequence */}
       {!introFinished && (
-        <IntroOverlay onComplete={() => setIntroFinished(true)} />
+        <IntroOverlay onComplete={handleIntroComplete} />
       )}
 
       {/* Main Experience Layout */}
       <div className={`transition-opacity duration-1000 ${introFinished ? "opacity-100" : "opacity-0"}`}>
         {/* Floating Navigation Pill */}
-        <Navbar />
+        <Navbar isPlaying={isMusicPlaying} onToggleMusic={toggleMusic} />
 
-        {/* Hero Section with Cinematic Background Video */}
+        {/* Hero Section with Muted Cinematic Background Video */}
         <HeroSection />
 
         {/* Photo Memory Section */}
@@ -70,6 +82,9 @@ export default function BirthdayPage() {
 
         {/* Cinematic Closing & Secret Easter Egg */}
         <FinalSection />
+
+        {/* Floating Calm Music Controller */}
+        <MusicPlayer isPlaying={isMusicPlaying} onToggle={toggleMusic} />
       </div>
     </main>
   );

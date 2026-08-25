@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Sparkles, Flower2 } from "lucide-react";
+import { Flower2, Sparkles } from "lucide-react";
 
-interface Petal {
+interface FlowerParticle {
   x: number;
   y: number;
   size: number;
@@ -19,17 +19,17 @@ interface Petal {
   rotSpeedY: number;
   rotSpeedZ: number;
   opacity: number;
+  isFlower: boolean; // true = 5-petal sakura flower, false = single rose petal
   colorTop: string;
   colorMid: string;
   colorBottom: string;
-  veinColor: string;
+  centerColor: string;
 }
 
 export default function FlowerRain() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const petalsRef = useRef<Petal[]>([]);
+  const flowersRef = useRef<FlowerParticle[]>([]);
   const animFrameId = useRef<number | null>(null);
-  const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,143 +49,161 @@ export default function FlowerRain() {
 
     window.addEventListener("resize", handleResize);
 
-    // Color palettes for organic petals
-    const petalPalettes = [
-      // Soft Rose Pink
+    const flowerPalettes = [
+      // Soft Rose & Sakura Pink
       {
-        top: "#FFB7C5",
-        mid: "#F48CA0",
-        bottom: "#D94F70",
-        vein: "rgba(255, 255, 255, 0.4)",
+        top: "#FFB8C6",
+        mid: "#F77F98",
+        bottom: "#E0486D",
+        center: "#FFE484",
       },
-      // Crimson Velvet Rose
+      // Deep Velvet Crimson
       {
-        top: "#E25875",
-        mid: "#C72C48",
-        bottom: "#8B1028",
-        vein: "rgba(255, 180, 190, 0.35)",
+        top: "#F45B7A",
+        mid: "#D11E48",
+        bottom: "#960A2C",
+        center: "#FFD166",
       },
-      // Cherry Blossom Sakura
+      // Pastel Cherry Blossom
       {
-        top: "#FFE4E8",
-        mid: "#FFC2CD",
-        bottom: "#FFA5B8",
-        vein: "rgba(255, 255, 255, 0.5)",
+        top: "#FFF0F3",
+        mid: "#FFC2D1",
+        bottom: "#FF85A1",
+        center: "#FFDE59",
       },
-      // Golden Champagne Petal
+      // Glowing Champagne Gold Flower
       {
-        top: "#FFF6D6",
-        mid: "#F3DA8C",
+        top: "#FFF9E6",
+        mid: "#F5DF8E",
         bottom: "#D4AF37",
-        vein: "rgba(255, 255, 255, 0.6)",
+        center: "#FFFFFF",
       },
     ];
 
-    const createPetal = (startY?: number): Petal => {
-      const palette = petalPalettes[Math.floor(Math.random() * petalPalettes.length)];
-      const size = Math.random() * 11 + 9; // Size between 9px and 20px
+    const createParticle = (startY?: number): FlowerParticle => {
+      const palette = flowerPalettes[Math.floor(Math.random() * flowerPalettes.length)];
+      const isFlower = Math.random() > 0.45; // 55% full flowers, 45% single petals
+      const size = isFlower ? Math.random() * 14 + 14 : Math.random() * 12 + 10;
 
       return {
         x: Math.random() * width,
         y: startY !== undefined ? startY : Math.random() * -height,
         size,
-        speedY: Math.random() * 1.6 + 1.1,
-        speedX: (Math.random() - 0.5) * 0.8,
-        swaySpeed: Math.random() * 0.02 + 0.01,
+        speedY: Math.random() * 1.8 + 1.2,
+        speedX: (Math.random() - 0.5) * 0.9,
+        swaySpeed: Math.random() * 0.025 + 0.015,
         swayAngle: Math.random() * Math.PI * 2,
-        swayRadius: Math.random() * 1.8 + 0.8,
+        swayRadius: Math.random() * 2.2 + 1.2,
         rotX: Math.random() * Math.PI * 2,
         rotY: Math.random() * Math.PI * 2,
         rotZ: Math.random() * Math.PI * 2,
-        rotSpeedX: (Math.random() - 0.5) * 0.03,
-        rotSpeedY: (Math.random() - 0.5) * 0.04,
-        rotSpeedZ: (Math.random() - 0.5) * 0.02,
-        opacity: Math.random() * 0.4 + 0.55,
+        rotSpeedX: (Math.random() - 0.5) * 0.035,
+        rotSpeedY: (Math.random() - 0.5) * 0.045,
+        rotSpeedZ: (Math.random() - 0.5) * 0.025,
+        opacity: Math.random() * 0.35 + 0.65,
+        isFlower,
         colorTop: palette.top,
         colorMid: palette.mid,
         colorBottom: palette.bottom,
-        veinColor: palette.vein,
+        centerColor: palette.center,
       };
     };
 
-    // Initialize 42 fluttering petals distributed across and above the viewport
-    const totalPetals = Math.min(Math.floor(width / 32), 48);
-    petalsRef.current = Array.from({ length: totalPetals }, () =>
-      createPetal(Math.random() * height - height * 0.5)
+    // Initialize 60 falling flower particles across the screen
+    const totalParticles = Math.min(Math.max(Math.floor(width / 24), 45), 70);
+    flowersRef.current = Array.from({ length: totalParticles }, () =>
+      createParticle(Math.random() * height)
     );
 
-    // Animation Loop with 3D wind & tumbling physics
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      petalsRef.current.forEach((petal) => {
-        // Apply 3D rotation
-        petal.rotX += petal.rotSpeedX;
-        petal.rotY += petal.rotSpeedY;
-        petal.rotZ += petal.rotSpeedZ;
+      flowersRef.current.forEach((item) => {
+        // 3D physics & wind updates
+        item.rotX += item.rotSpeedX;
+        item.rotY += item.rotSpeedY;
+        item.rotZ += item.rotSpeedZ;
 
-        // Apply wind sway & gravitational fall
-        petal.swayAngle += petal.swaySpeed;
-        petal.x += Math.sin(petal.swayAngle) * petal.swayRadius + petal.speedX;
-        petal.y += petal.speedY;
+        item.swayAngle += item.swaySpeed;
+        item.x += Math.sin(item.swayAngle) * item.swayRadius + item.speedX;
+        item.y += item.speedY;
 
-        // Re-spawn petal at top when it drifts below viewport
-        if (petal.y > height + 40) {
-          petal.y = -30;
-          petal.x = Math.random() * width;
+        // Reset particle to top if fallen past bottom
+        if (item.y > height + 50) {
+          item.y = -40;
+          item.x = Math.random() * width;
         }
-        if (petal.x < -40) petal.x = width + 30;
-        if (petal.x > width + 40) petal.x = -30;
+        if (item.x < -50) item.x = width + 40;
+        if (item.x > width + 50) item.x = -40;
 
-        // 3D Perspective Scaling based on rotation
-        const scaleX = Math.cos(petal.rotY);
-        const scaleY = Math.cos(petal.rotX);
+        const scaleX = Math.cos(item.rotY);
+        const scaleY = Math.cos(item.rotX);
 
         ctx.save();
-        ctx.translate(petal.x, petal.y);
-        ctx.rotate(petal.rotZ);
-        ctx.scale(Math.max(0.15, Math.abs(scaleX)), Math.max(0.2, Math.abs(scaleY)));
+        ctx.translate(item.x, item.y);
+        ctx.rotate(item.rotZ);
+        ctx.scale(Math.max(0.2, Math.abs(scaleX)), Math.max(0.25, Math.abs(scaleY)));
+        ctx.globalAlpha = item.opacity;
 
-        // Draw curved organic petal path
-        ctx.beginPath();
-        ctx.moveTo(0, -petal.size);
-        ctx.bezierCurveTo(
-          petal.size * 0.85,
-          -petal.size * 0.55,
-          petal.size * 0.9,
-          petal.size * 0.5,
-          0,
-          petal.size
-        );
-        ctx.bezierCurveTo(
-          -petal.size * 0.9,
-          petal.size * 0.5,
-          -petal.size * 0.85,
-          -petal.size * 0.55,
-          0,
-          -petal.size
-        );
-        ctx.closePath();
+        if (item.isFlower) {
+          // Draw 5-petal Sakura / Blossom Flower
+          const petalCount = 5;
+          const r = item.size;
 
-        // Luxury Gradient Fill
-        const grad = ctx.createLinearGradient(0, -petal.size, 0, petal.size);
-        grad.addColorStop(0, petal.colorTop);
-        grad.addColorStop(0.55, petal.colorMid);
-        grad.addColorStop(1, petal.colorBottom);
-        ctx.fillStyle = grad;
-        ctx.globalAlpha = petal.opacity;
-        ctx.shadowColor = petal.colorMid;
-        ctx.shadowBlur = 6;
-        ctx.fill();
+          for (let i = 0; i < petalCount; i++) {
+            const angle = (i * Math.PI * 2) / petalCount;
+            ctx.save();
+            ctx.rotate(angle);
 
-        // Subtle Petal Spine / Vein Highlight
-        ctx.beginPath();
-        ctx.moveTo(0, -petal.size * 0.7);
-        ctx.lineTo(0, petal.size * 0.7);
-        ctx.strokeStyle = petal.veinColor;
-        ctx.lineWidth = 0.75;
-        ctx.globalAlpha = petal.opacity * 0.45;
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(r * 0.45, -r * 0.7, r * 0.4, -r * 1.1, 0, -r);
+            ctx.bezierCurveTo(-r * 0.4, -r * 1.1, -r * 0.45, -r * 0.7, 0, 0);
+            ctx.closePath();
+
+            const grad = ctx.createRadialGradient(0, 0, 2, 0, -r * 0.7, r);
+            grad.addColorStop(0, item.colorTop);
+            grad.addColorStop(0.6, item.colorMid);
+            grad.addColorStop(1, item.colorBottom);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            ctx.restore();
+          }
+
+          // Flower Center Pistil
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+          ctx.fillStyle = item.centerColor;
+          ctx.shadowColor = item.colorMid;
+          ctx.shadowBlur = 8;
+          ctx.fill();
+        } else {
+          // Draw Curved Organic Rose Petal
+          const s = item.size;
+          ctx.beginPath();
+          ctx.moveTo(0, -s);
+          ctx.bezierCurveTo(s * 0.9, -s * 0.5, s * 0.95, s * 0.5, 0, s);
+          ctx.bezierCurveTo(-s * 0.95, s * 0.5, -s * 0.9, -s * 0.5, 0, -s);
+          ctx.closePath();
+
+          const grad = ctx.createLinearGradient(0, -s, 0, s);
+          grad.addColorStop(0, item.colorTop);
+          grad.addColorStop(0.55, item.colorMid);
+          grad.addColorStop(1, item.colorBottom);
+          ctx.fillStyle = grad;
+          ctx.shadowColor = item.colorMid;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+
+          // Petal vein
+          ctx.beginPath();
+          ctx.moveTo(0, -s * 0.7);
+          ctx.lineTo(0, s * 0.7);
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
 
         ctx.restore();
       });
@@ -199,58 +217,56 @@ export default function FlowerRain() {
       window.removeEventListener("resize", handleResize);
       if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
     };
-  }, [isActive]);
+  }, []);
 
-  const addPetalBurst = () => {
+  const triggerFlowerBurst = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const width = canvas.width;
-    const height = canvas.height;
 
-    // Add a shower of 25 new falling petals from top
-    const newPetals: Petal[] = Array.from({ length: 25 }, () => ({
+    const burst = Array.from({ length: 30 }, () => ({
       x: Math.random() * width,
-      y: Math.random() * -150 - 20,
-      size: Math.random() * 12 + 10,
-      speedY: Math.random() * 2.2 + 1.4,
-      speedX: (Math.random() - 0.5) * 1.2,
-      swaySpeed: Math.random() * 0.03 + 0.015,
+      y: Math.random() * -120 - 20,
+      size: Math.random() * 16 + 14,
+      speedY: Math.random() * 2.5 + 1.8,
+      speedX: (Math.random() - 0.5) * 1.5,
+      swaySpeed: Math.random() * 0.035 + 0.02,
       swayAngle: Math.random() * Math.PI * 2,
-      swayRadius: Math.random() * 2.2 + 1,
+      swayRadius: Math.random() * 2.5 + 1.5,
       rotX: Math.random() * Math.PI * 2,
       rotY: Math.random() * Math.PI * 2,
       rotZ: Math.random() * Math.PI * 2,
-      rotSpeedX: (Math.random() - 0.5) * 0.04,
-      rotSpeedY: (Math.random() - 0.5) * 0.05,
-      rotSpeedZ: (Math.random() - 0.5) * 0.03,
-      opacity: Math.random() * 0.35 + 0.65,
-      colorTop: "#FFB7C5",
-      colorMid: "#F48CA0",
-      colorBottom: "#D94F70",
-      veinColor: "rgba(255, 255, 255, 0.5)",
+      rotSpeedX: (Math.random() - 0.5) * 0.05,
+      rotSpeedY: (Math.random() - 0.5) * 0.06,
+      rotSpeedZ: (Math.random() - 0.5) * 0.04,
+      opacity: Math.random() * 0.3 + 0.7,
+      isFlower: Math.random() > 0.4,
+      colorTop: "#FFB8C6",
+      colorMid: "#F77F98",
+      colorBottom: "#E0486D",
+      centerColor: "#FFE484",
     }));
 
-    petalsRef.current.push(...newPetals);
+    flowersRef.current.push(...burst);
   };
 
   return (
     <>
-      {/* Full-Screen Romantic Petal Shower Canvas */}
+      {/* Full-Screen Romantic Falling Flowers & Petals Canvas */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-30 w-full h-full"
-        style={{ mixBlendMode: "screen" }}
+        className="fixed inset-0 pointer-events-none z-40 w-full h-full"
       />
 
-      {/* Floating Shower Flower Petals Button */}
+      {/* Floating Interactive Flower Rain Button */}
       <button
-        onClick={addPetalBurst}
-        className="fixed bottom-6 left-6 z-40 p-2.5 sm:px-4 sm:py-2.5 rounded-full glass-panel-rose text-roseGold-200 hover:text-white border border-roseGold-400/30 hover:border-roseGold-400/60 transition-all hover:scale-105 shadow-xl flex items-center gap-2 cursor-pointer group"
-        title="Shower More Flower Petals"
-        aria-label="Shower Rose Petals"
+        onClick={triggerFlowerBurst}
+        className="fixed bottom-6 left-6 z-50 p-2.5 sm:px-4 sm:py-2.5 rounded-full glass-panel-rose text-roseGold-200 hover:text-white border border-roseGold-400/40 hover:border-roseGold-400/80 transition-all hover:scale-105 shadow-[0_4px_25px_rgba(247,127,152,0.35)] flex items-center gap-2 cursor-pointer group backdrop-blur-xl"
+        title="Shower More Flowers 🌸"
+        aria-label="Shower Flowers"
       >
-        <Flower2 className="w-4 h-4 text-roseGold-400 animate-spin-slow group-hover:scale-110 transition-transform" />
-        <span className="hidden sm:inline text-xs font-serif tracking-wider font-semibold">
+        <Flower2 className="w-4 h-4 text-roseGold-300 animate-spin-slow group-hover:scale-110 transition-transform" />
+        <span className="text-xs font-serif tracking-wider font-semibold text-champagne-100">
           Flower Rain 🌸
         </span>
       </button>

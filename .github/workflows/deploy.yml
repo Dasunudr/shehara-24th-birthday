@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main", "master"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -18,24 +18,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Build and static export
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build with Next.js
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ github.event.repository.name == format('{0}.github.io', github.repository_owner) && '' || format('/{0}', github.event.repository.name) }}
         run: npm run build
 
-      - name: Upload artifact for Pages
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out

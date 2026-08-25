@@ -34,6 +34,18 @@ export default function FinalSection() {
 
   return (
     <footer className="relative pt-24 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-12 bg-night-900 overflow-hidden border-t border-white/5">
+      {/* Soft Cinematic Background Photo Backdrop */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-20">
+        <Image
+          src={getAssetPath(siteConfig.finalImage)}
+          alt="Atmospheric Background"
+          fill
+          className="object-cover object-center filter blur-2xl scale-110"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/80 to-night-900/90" />
+      </div>
+
       {/* Background Ambient Glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[85vw] max-w-[800px] h-[400px] bg-gradient-to-t from-roseGold-500/10 via-amber-500/5 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
@@ -47,10 +59,10 @@ export default function FinalSection() {
           className="relative w-44 h-44 sm:w-56 sm:h-56 rounded-full p-1.5 bg-gradient-to-tr from-amber-400 via-roseGold-400 to-amber-300 shadow-[0_0_50px_rgba(224,122,95,0.4)] mb-8 overflow-hidden group cursor-pointer"
           onClick={scrollToTop}
         >
-          <div className="relative w-full h-full rounded-full overflow-hidden">
+          <div className="relative w-full h-full rounded-full overflow-hidden bg-night-900">
             <Image
               src={getAssetPath(siteConfig.finalImage)}
-              alt="Closing Portrait"
+              alt="Shehara Closing Portrait"
               fill
               className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
               sizes="250px"

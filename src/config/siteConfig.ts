@@ -56,7 +56,7 @@ export const siteConfig = {
   gardenImage: "/images/garden-01.jpg",
   
   // Closing section photo
-  finalImage: "/images/portrait-02.jpg",
+  finalImage: "/images/portrait-01.jpg",
 
   // Audio background music
   music: {

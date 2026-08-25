@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, ChevronDown } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
+import { getAssetPath } from "@/utils/assetPath";
 
 export default function HeroSection() {
   const scrollToNext = () => {
@@ -23,7 +24,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="relative w-full h-full animate-ken-burns">
           <Image
-            src={siteConfig.heroImage}
+            src={getAssetPath(siteConfig.heroImage)}
             alt="Hero Portrait"
             fill
             priority

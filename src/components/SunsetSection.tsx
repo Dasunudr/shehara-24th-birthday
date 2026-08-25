@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles, Sun, Heart } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
+import { getAssetPath } from "@/utils/assetPath";
 
 export default function SunsetSection() {
   return (
@@ -18,7 +19,7 @@ export default function SunsetSection() {
           className="relative w-full h-full"
         >
           <Image
-            src={siteConfig.sunsetImage}
+            src={getAssetPath(siteConfig.sunsetImage)}
             alt="Golden Sunset by the sea"
             fill
             className="object-cover object-center filter brightness-[0.75] contrast-[1.1] saturate-[1.15]"

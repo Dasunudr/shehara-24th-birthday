@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles, TreePine, Heart, Compass, MapPin } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
+import { getAssetPath } from "@/utils/assetPath";
 
 export default function GardenSection() {
   return (
@@ -24,7 +25,7 @@ export default function GardenSection() {
         >
           <div className="relative h-[440px] sm:h-[540px] w-full rounded-3xl overflow-hidden glass-panel border border-white/15 shadow-2xl group">
             <Image
-              src={siteConfig.gardenImage}
+              src={getAssetPath(siteConfig.gardenImage)}
               alt="Festive lights and sparkling tree"
               fill
               className="object-cover object-center group-hover:scale-105 transition-transform duration-700 filter brightness-[0.95]"

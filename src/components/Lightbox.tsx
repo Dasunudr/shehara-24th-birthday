@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Heart, Sparkles, MapPin } from "lucide-react";
 import { PhotoItem } from "@/config/siteConfig";
+import { getAssetPath } from "@/utils/assetPath";
 
 interface LightboxProps {
   photo: PhotoItem | null;
@@ -115,7 +116,7 @@ export default function Lightbox({
           {/* Image Box */}
           <div className="relative w-full h-[55vh] sm:h-[65vh] rounded-xl sm:rounded-2xl overflow-hidden bg-night-900">
             <Image
-              src={photo.src}
+              src={getAssetPath(photo.src)}
               alt={photo.alt}
               fill
               className="object-contain"

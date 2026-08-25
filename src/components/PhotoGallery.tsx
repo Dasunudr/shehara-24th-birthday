@@ -22,6 +22,7 @@ import {
 import { siteConfig } from "@/config/siteConfig";
 import Lightbox from "./Lightbox";
 import { triggerHeartBurst, triggerBirthdayConfetti } from "@/utils/confetti";
+import { getAssetPath } from "@/utils/assetPath";
 
 type GalleryMode = "scrapbook" | "filmstrip" | "showcase";
 
@@ -216,7 +217,7 @@ export default function PhotoGallery() {
                     {/* Glossy Photo Frame */}
                     <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-night-900 shadow-inner mb-4">
                       <Image
-                        src={photo.src}
+                        src={getAssetPath(photo.src)}
                         alt={photo.alt}
                         fill
                         className="object-cover object-center filter contrast-[1.03] group-hover:scale-105 transition-transform duration-700"
@@ -374,7 +375,7 @@ export default function PhotoGallery() {
               >
                 <div className="relative aspect-[3/4] w-full overflow-hidden">
                   <Image
-                    src={photo.src}
+                    src={getAssetPath(photo.src)}
                     alt={photo.alt}
                     fill
                     className="object-cover object-center group-hover:scale-108 transition-transform duration-700 filter brightness-[0.9]"

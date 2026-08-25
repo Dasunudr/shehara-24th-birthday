@@ -73,7 +73,7 @@ export default function VideoSection() {
               <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-night-900">
                 {video.poster ? (
                   <Image
-                    src={video.poster}
+                    src={getAssetPath(video.poster)}
                     alt={video.title}
                     fill
                     className="object-cover object-center filter brightness-[0.8] group-hover:scale-105 transition-transform duration-700"

@@ -7,6 +7,7 @@ import { Heart, Sparkles, ArrowUp } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
 import EasterEggModal from "./EasterEggModal";
 import { triggerHeartBurst } from "@/utils/confetti";
+import { getAssetPath } from "@/utils/assetPath";
 
 export default function FinalSection() {
   const [clickCount, setClickCount] = useState(0);
@@ -48,7 +49,7 @@ export default function FinalSection() {
         >
           <div className="relative w-full h-full rounded-full overflow-hidden">
             <Image
-              src={siteConfig.finalImage}
+              src={getAssetPath(siteConfig.finalImage)}
               alt="Closing Portrait"
               fill
               className="object-cover object-center group-hover:scale-110 transition-transform duration-700"

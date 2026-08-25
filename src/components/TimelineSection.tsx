@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles, Calendar, Heart, Clock, Compass } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
+import { getAssetPath } from "@/utils/assetPath";
 
 export default function TimelineSection() {
   return (
@@ -92,7 +93,7 @@ export default function TimelineSection() {
                     {item.image && (
                       <div className="relative h-48 sm:h-56 w-full rounded-2xl overflow-hidden mb-4 bg-night-900">
                         <Image
-                          src={item.image}
+                          src={getAssetPath(item.image)}
                           alt={item.title}
                           fill
                           className="object-cover object-center group-hover:scale-105 transition-transform duration-700"

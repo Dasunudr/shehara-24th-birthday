@@ -1,13 +1,46 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
+import React, { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, ChevronDown } from "lucide-react";
+import { Sparkles, Heart, ChevronDown, Volume2, VolumeX, Play, Pause } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
 import { getAssetPath } from "@/utils/assetPath";
 
 export default function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {
+        setIsPlaying(false);
+      });
+    }
+  }, []);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+    }
+  };
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
+
   const scrollToNext = () => {
     const gallery = document.querySelector("#gallery");
     if (gallery) {
@@ -23,22 +56,22 @@ export default function HeroSection() {
       {/* Background Cinematic Video Container */}
       <div className="absolute inset-0 z-0 overflow-hidden bg-night-900">
         <video
+          ref={videoRef}
           src={getAssetPath("/videos/video-01.mp4")}
           poster={getAssetPath(siteConfig.heroImage)}
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover object-center scale-105 filter brightness-[0.7] contrast-[1.05]"
+          className="w-full h-full object-cover object-center filter brightness-[0.82] contrast-[1.03]"
         />
 
-        {/* Cinematic Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/60 to-night-900/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-night-900/80 via-transparent to-night-900/80" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(13,10,18,0.7)_100%)]" />
-        
-        {/* Soft Golden Sunset Glow in background */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[600px] h-[50vw] max-h-[500px] bg-amber-500/15 rounded-full blur-[140px] pointer-events-none" />
+        {/* Clean, Non-blocking Cinematic Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/30 to-black/40" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(13,10,18,0.75)_100%)]" />
+
+        {/* Soft Golden Sunset Glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[600px] h-[50vw] max-h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
       </div>
 
       {/* Hero Foreground Content */}
@@ -82,10 +115,30 @@ export default function HeroSection() {
           transition={{ duration: 0.9, delay: 0.7 }}
           className="mt-6 max-w-2xl"
         >
-          <p className="font-sans text-base sm:text-lg md:text-xl text-champagne-100/90 font-light leading-relaxed tracking-wide">
+          <p className="font-sans text-base sm:text-lg md:text-xl text-champagne-100/90 font-light leading-relaxed tracking-wide drop-shadow-md">
             &ldquo;{siteConfig.subheading}&rdquo;
           </p>
         </motion.div>
+      </div>
+
+      {/* Video Controls (Mute/Unmute & Play/Pause) floating bottom right */}
+      <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2">
+        <button
+          onClick={togglePlay}
+          className="p-2.5 rounded-full glass-panel bg-night-900/60 hover:bg-night-900/90 text-champagne-100 border border-white/20 transition-all hover:scale-105 backdrop-blur-md cursor-pointer shadow-lg"
+          title={isPlaying ? "Pause background video" : "Play background video"}
+          aria-label={isPlaying ? "Pause video" : "Play video"}
+        >
+          {isPlaying ? <Pause className="w-4 h-4 text-amber-300" /> : <Play className="w-4 h-4 text-amber-300 fill-amber-300" />}
+        </button>
+        <button
+          onClick={toggleMute}
+          className="p-2.5 rounded-full glass-panel bg-night-900/60 hover:bg-night-900/90 text-champagne-100 border border-white/20 transition-all hover:scale-105 backdrop-blur-md cursor-pointer shadow-lg"
+          title={isMuted ? "Unmute video sound" : "Mute video sound"}
+          aria-label={isMuted ? "Unmute video" : "Mute video"}
+        >
+          {isMuted ? <VolumeX className="w-4 h-4 text-champagne-300" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
+        </button>
       </div>
 
       {/* Scroll Down Indicator */}

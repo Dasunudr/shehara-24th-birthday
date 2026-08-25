@@ -27,7 +27,6 @@ export default function Navbar({ isPlaying, onToggleMusic }: NavbarProps) {
     { label: "Memories", href: "#gallery" },
     { label: "Videos", href: "#videos" },
     { label: "24 Reasons", href: "#reasons" },
-    { label: "Wishes 🎈", href: "#cartoon-wishes" },
     { label: "Timeline", href: "#timeline" },
     { label: "Sunset", href: "#sunset" },
     { label: "Letter", href: "#letter" },

@@ -10,7 +10,6 @@ import ReasonsSection from "@/components/ReasonsSection";
 import TimelineSection from "@/components/TimelineSection";
 import SunsetSection from "@/components/SunsetSection";
 import GardenSection from "@/components/GardenSection";
-import CartoonWishWall from "@/components/CartoonWishWall";
 import LetterSection from "@/components/LetterSection";
 import BirthdayCake from "@/components/BirthdayCake";
 import FinalSection from "@/components/FinalSection";
@@ -55,9 +54,6 @@ export default function BirthdayPage() {
 
         {/* 24 Reasons That Make You Special */}
         <ReasonsSection />
-
-        {/* Famous Cartoon Character Wishes Wall */}
-        <CartoonWishWall />
 
         {/* Memory Timeline */}
         <TimelineSection />
